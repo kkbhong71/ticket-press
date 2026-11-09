@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ticket Press</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* ── 레이아웃: 좌측 설정 패널 + 우측 A4 미리보기. 인쇄 시 패널 제거 ── */
+:root{
+  --app-bg:#f0f2f5; --app-surface:#ffffff; --app-ink:#14181f; --app-ink-soft:#616c7d;
+  --app-line:#dadfe8; --app-accent:#4F46E5; --app-accent-soft:#EEF2FF; --app-warn:#B45309;
+  --shadow:0 1px 2px rgba(14,22,40,.05), 0 10px 30px rgba(14,22,40,.09);
+  --f-ko:'IBM Plex Sans KR','Malgun Gothic','맑은 고딕',sans-serif;
+  --f-mono:'IBM Plex Mono','Consolas',monospace;
+  --logo:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAL4AAAC+CAMAAAC8qkWvAAAAkFBMVEUAAAIVKnMRHF4QIFoSI18XLoPfBRgEDTZXGFOzEzMAAP8MXWWhHkv2CAqlHitiYmFzDBOlGCQHEDkVIqIGZhcSUaNmJV3NFSX/+/3JIzAA//9UWKewFybPM1EeNIVtHC1/f/+tNUqfUFVeLU+pL1ExQobtEWZlEzVcVBmbR1zgZ2QySIxyQ09///+kRlumR2FzjnGXAAAAMHRSTlMB+Rpen/36V/36AQT3A1kHCxiNBgQJCpsBYgEGoulZTgJmC1IV+gPgCGgUYF0Cstew+s/OAAAYx0lEQVR42s1dh1ojuw72SHIGJkACAZZlezm93Pd/u2tLsi1PDyWc+c5ZWpL5Lcvq0jj3Uhe4rXyzD/+3bXtjrvBja14J7r90QQHUttQwWL4Qwx8icvnxpmmobfW18N9YhMIIMIkQMfxrCV1ROr6ilZe4/8QSFDpE3DcNoeAB/oVclL75nF4bVtHwzshHbN+c+khN0wb6uy0Dp/BjdXn9J25PeMU/zGThLe2bEl9uTgKK9yDj9j599eYnveLrZcvCEuCNjjLfl5qEHfskX7iQ3x/OQYPp004KPdI9cHb8dsguU5c3W0P85ng4+CTDScEzj6N8jbD8ON75daUVUCubcbIVyKZDzTPDJRDgwn5EaRU+rqET0j7cDSCIGRrnjmPgywri2bk5hbB5FFkT93wJVbwCfFpxMuJOtjfxDLw2AyXwS5jC/qTL0YodEBEQvjy84gqixjdi0s9JRvgcNGvUv4B+WSQxUYQ03SstILLCWhmPQEFCuogcl+D7rAtaukF4PcaJvEAr9RJ5PbqB+n5hrwoLQdO8AvKt7uxK8BH5gS2cIFyXxU82KyjeIa7i8MLSsuVPXWkbBFsHo1ED8TjS7rOfpzmajyU+wvCy4IE/0pA+WgwLR5EiMcMB8ERz8D3FDSLLQbIB3cstICrZwAM+cTBFM3GJkZj3/YpTgrV6wyhq2xekPwsc6t1zxSFeAz8rCLMBkeluXopzMNID+3oyWsu0Fr6f1s3RYogmCFqBzB/fugM8H72c2XI/JU/YYMQlYfgXzch54fuo2VRC2Q2Ixw2faUR0To4RWLpQ/OyoAggPs/bmvJJSlJjRZ/g+MxA+y4wW9NUZ9fGUYeQnPnFWZmc28fOGqP0BI2MexF9T28gXQuHzDnAXdCD12R6ZV2NsJ/yT8aymfU9mUjSOUA9vT43F7Yia8unhp3JovT1VkXsi8YHPQnHFj11EFPlRmcsCBm9nJn0q+zDzDURO0JHx0MaFEW/EmGikHN4pF00uANPBHWzjM/B3UXm7gb0SfZDAUgdi3ge4w4GTkiJQffkbDQgas6zZ6VTTyI/R/ykL4DdSitb4Spcix9GiAW2pSuJ2yOqLuwJ3sM0mNw60BUafOSKlUdH0JPp3HTQqMAP4XqAJJLZmzlryWRX3VDxOgxRUWwiRR6N8HueuAOJoJzKeWpr0Z8MdA/OT5RuJVq12mRHNWRI7DaePdwqeHsU5MPWJ9IHPbtnkzO3b5ZskPtI9yEpj2iylKADd3bGO1TQ9wo0/YL63gl9PoDEm8rNxiKh/uxdCz+c431oU+9FRVnnHCpe/4D8ioBBF+jqXls/qE/XKIZ+uZfzHeMBRGK/zx5/t1S04wjkIsdaBZKGzKp6gfPMCYfY11kUQn3ewSug04HAl+OfmdqojMEP+KP5xlfRHcivQS4T5hZI0kxtQjPG1xzcf2/noxkvmdLZr6BUtRVglMxe5kV4+krd8AmDR+mHPFh5wycV7efCuisNMbDibuDDLhk2S+HOf8/JxeD7BC+I/Sv855wvkeNNCbON1kggckfllnFUz+wQF8HVWhwSHWfZwihnpteLvQQiPcG1MzKsb6UV6zkqdLYh1P6V28RWTHw9DFQxVRCBIH5x1bjla4aOY5SDswLnD16xC2Pb5n9itg2JZwLTyEvTqcMJWond0Er6v+L+ilcTZg23tNTRMNPne+Kfsf0bfOnotJ0QfPv1rsUGZ6zmQ7Uo0Bqbxx5djCq1ijCsDe6IG/fbVM9/bHFeSgEwK5iUId9F0hjG+a6gDc9wdaPgIjbw/xYUlch45OoaIiiWAo5E3Tv9AOTkSRItmfwD9V9K13QnAA0dnYjhGgs/xPyieJY3qLg4Iqr6NaiLGY+I7iRdSzsPrX7fwAIwf9P64c9Z7wi2NBW5BNZbn2HqMIzPxm+Q14quli/ts3An7EHJRQRSWkmZtsu7qk5/3Se1kz+nJ8CPiITKa0J7+OVnBSieh8ih7YjjJIQMyinPACMAcRTk0nbxQKIrAnfDqJGCIknlBZaN0uZEgahXzY7nJEodUY+Mp0buUESGpevtMjdX/2Fe90PMQSfgf8tsIPpwU/yFLzy0MDBd67Kku4LhUP9uKReTjaYvlXElIjQVSAq4+r1FtrXp+HxxQ0Z+4WrRz6ayOwY+auHp5i72iIa8Z0M+pUMKd+lLyD+FLoUrfw4Xp+opFG18zdd06saiJveVYn5+ptqli/jPx9Zj/myS+VnuZH6VwecSQueF8jPmgr2LTLNg+fhQR2/blvW2Vu+1Fk2E8pFPdO8KmnLsaMe6o1OdVy+gml/DoxkP+6gumfgF10HNe2fsVLkrXFfIz8KqqqBmk83vZVa18TjvXjbMdTdYuBWO6ttZwMjs7WVojyMfLono0hclKpOlDMFdxQ6x5IR3yfkK+4rPdAPbBjQdWx8kfjfGp1+WQ3W5sGZPxMrHbsrXW01n2xQPzCNxsNaFv+rJ2uXBJVtBfwGicW1fOdlsi/kDulDqLHucrdhoekUFIwrZ9LIfbaViFPbZsnwPmOd2FNCh09QbGth/KouXiBV8LH1pTODOI+3bdyJnx1qqcgO+bKfiJayZo7/2Q/BUP+P6u2R/7C7BWfl+wADso8UVtazRzTwb2gslAy4nMJBNr5ZaLMmbgiz8NvbCPH2BT5idl5TbTh3JRnG/6dj50y/WkrJLcbjcRQeW+nKUzU223reNKUQ/eQA5YcTV+W5hzwKvgPszLMSttwmm6rA65FVYlXb+YdCpuu4FPPUsCWsyeSsm/i0GV2zms+lkQf8y40SC7d+5+d29WIo2A98moWxC6WAWf8mulO+/OobdGfzy1DN/b8DEl8VqouJ1HHwXsByXz/fcff+/c9wRi5+5/7O8TDe4Ok9aAftIOKub3BX7k4BKtFdnD8cBe9FsiJk1VighzGaN8xC+/X7o//v3jfve9EHF3v/vb/e1+/bmwj4muo8KiDx8FPodEaubpQLUSZXNHhcCE1OBARDxxl9eB9v/+71vAflkd290X92/4cn2piaw5lWFp1uWdEtv8kM1Q6qTOCuE2V0bko5vhw2joeiCLmTcuLx/c7dXHiz/2fTsp8P63i49fnHv49bKW5xMZY+OFl0WpE5OwscvV2ggciSTNbNhZATJeo5n8NxeZ/fb628V5wHrdF5rhd/vz86v4+1+XhACM2z0SNKFs0ovD29bFI6bmb2obR3eB5drPq/NP/9u76+uh0N9fhyVcnF/9XCzDIDfO/KxUzK7H+NUAfj8Duuw+6HXzxV1fnH/6tJ/2/yL+T9fuR//89BUvrLqrnN2ovGz1gDmetML8ztfZxcX5+afijfevKAMe3Kfz84uLs7OZGmG8XXPXoJdQcyiVSdXLgVrhMVv6EdBvNpuLM/whSmqE9PF2F+ebTwH/GHqf6lQqG/HrFPxEfZxMZ9PQyR3Hf3YW0QfC/hYIqyW0lvJSRhvMhbO0yrMpL2okYTjdHEBs8qyGvx3fgAjqfLM5r6lK+Rru0vnYAoakn4PvDfwVHlOxv2gUfIXeTyvVM37xyAaMl6ksUt/BVAnlRGA2R259OrKM5+JsXdl4We3ZirK4aRUnocJ2TImkLMXwI2HnkrubSL85Cn18z3la8Jl1dEfTrjBtIEW12x4JP5vvcQV0pqyQeMGvxZ+WfHYWZAeTZCLgU8OvXE2YhC/XTOsFPIR/fv9DwW/OEyP4pY4Vvn9a9GbzKVp386WgNny5Dr5fUTQVTK9vnxTE5rdFzqnX9dtvBX/fOJ0pc0jo/QTz+DmbweqgcMfrjwn8++u9hpZpoSRQArSB0/c/36d3fwwW0uV+XZVGha9Qf8xk8JPwg/nldu/fFfTZIeSQ3aQhrAEIIfbPq/T+zVX0BParikzG4RtNswj/8jIaxpn0m/ePgXj3hntpIgiUX3AH9/tgNmf6bz6+36kr83T4mlRAmmee6G5clztv3vN6XOqOGOsAKv5S6aGIaK/Mp1x/GD8D4/C556Ti/fC6g3w2LsC/vC63DRt/2b/dFPP0LYLwSe/MB10eAZ/9WwsfRULZjuiRvAQfWXNPPnYD+JPM04f/aHhw827qCNMyfKl/9BpdmDAaIvi92XFGf315eR2uy1/v7/fhcvv9FPPcxz/u95dyxfftK1psrkYWAFay2Myu8L4YDalBS90+jSHX8GMUwb23t3t3PZ4RnGSekavC/+5q3z/CCr8X2mUPXuC30gNa5CpHbL3vZSZY3ljSb9797va3tzu5tnzx2ZmCf8tXeNUuX/ff//nd4g8bsK3ZESTrNmi9MvClBzTjV/9lkFjZX33cVPDfXw2vL1++TFk6P758Gb7+fbWfwfy42o8ZzN6T6bojp3VSBX7ZoGwQF3dlv+9t88QVTckJ0/OsGDrzFx/h+z58bq5LzhsPDolrcFLNwMyT4z+Oavi7n4FxPm7WXpPw137Au6DE9rt+bUk/VSnUF1cdHSaToQROMMvCPt+8LvzAln8mof14i6ZdLKW1o2ViAyW5nIdG9Naff3473xwFf0zyHwF/s/n288/JQIlP3cgRvoapuG5TZnZhFTLc7eDH/y7O119TbhcHglZ/yMUPEMeuaC1J/eTMoMBPJXg0stpWBdfZUde0k3Xch2i4jTL4XKVvgoS5x73BOKuuynrSnKf/6hfymEZzclFbmVENThpr0Rfh6jN8mHeclhO2R13WGWT42jIMxjBmPUycFtL0hK/4HXUBtBiLf82LmUc7nsmYPoJX0hNdKXvnZnfWDsl+44JDeCnCPh0+187acpUIVKo14x6AGvxRE6d/suQ/PfW9gd8aC7kZwucmP5BUBEpvozcvljzUG1DfK/xc9247yyP8VA3ZtkzsXDXLK8tllALfvxnzFBnYo/5dKoZseWnCMFLnjynuqcOu3u7oGs8PTR6NpChgW8qX5e89+A29qdw3FkAZskNsxSFITUMqHm9dYh6eneD9yJk5PfxqL4CHwwLTNhXEJPhKd+Bu4xKrMWb2ya+acbGyasQ+k5+xY+ZPwxl6g8be7EptCOqD8ywZrYcKSksKpXIpnvgD+ayY4vE3ov3WjpQqEVSfS/GgalsxI/vIiqzHNyL+Qy5+SXxiTPlUCJnKUOtEjbQPejEc3op1MOss6QIpRTnBQzQ12GR6jHU8LjpTVvKGnG+FN4si5Z0q+Z660ijN9m1k2IE6v6u7D8BUe5pfpLDsEV0AneuK5tdYSVkINxa7ugA+/LmVe1GjItQvZ1lWNGI9PLl5LhmbxpwXbHgDhlbsr3sd7ovJAsWR6rjlRoRhKV5K5kmbwuqPEpHpc1eN92ruNP2RYcFu2JZIpy4x2dpHNH+00tPD7Y/yHWgvaspFrh5WqXvvM/WVkWVKKdmy9tSqi9IyKnLIzNXCtXeMaQPY80AItj3aGwbbyMjpRhNbywvotllwF+bJ8KX1pmJ+hk9CcD3IRpquaXza8hg3HtxJGkOVHg3iPmDkP8O6UT7GRfVVRxkzT79xyKXShmRQCPltnujrOviRUxL8KA/IKRfxiVp9iETh+trY9ErRsY7vVrhnq1b/HU3Xts5QTIMxyjzMo9GjBm66W0/9orHYUMgurxzHYb99brlUcVONjYrBcg9rRB2q1mP4BNH2c6lU+jF1A69vuWxSfERTeuq9HBAHjQqslZnK2WbTkmfrOC8ugcfbJfjEc/ViD7koMulgXv6QwAK/+MplUXGFlKy1w1DMigecFLS84ZBU3y/L0hN01E7ifYliR8s2AiLl/UUFzu3Gv9jyR0yx5WStDSQJdz8x+VX2iJjGHGiQCNB8kYNYgTpJJ8bAqEwF5bZrXHVq6/FA/G4q5RhM/N2wx1Fb53Kjrza8l3D5ovSUoVYqOCNeYJ6TfA0K8yy1ykUB1uuejDX4ZZDa+JgY4LkMkC1mU9a82vHixHCDu0x9GWiU88ZrdAgMilR1EJNK0ukRozJmwovcN90fVvov0T89SUONG30QS342yKLW7eBDr78kMiTlUQcSmB0veksTLDna6bPEb2070BGNu1B96dapq0K4z5j42CR9YHLETZwfaqIluY55i1WlMiwgjnTupCrtg/yQ17CosqTdwGeRL1FLHXsgKTiiKQRiJRIHgnJxIeWTFH7zi1/Yelu6DgMrmjloFv0WS02tiEwjOnj0xLQAgY6FJyWLucl7l8MO0XyddT6SMcV+AyRVlrswOCMyzX+7qiA2WSClAAxnpyN9YB8Ms63p1VyiIoj8PP+w1RdU4lZevY3asdf3M7l9PBMiSwyONfHARhNzOuCct3BwSn4C1XQg6Ktw18T5hezrdBEHj9dAtl4Yihbc+Cn4AfyOUt2FzKfBpD5LHcm81IUUdNAxH4leX+/Q9KrQBAunsiYQy0FmUIPYKyTw/RR8HWxWlTBieqJGnvEyP9gscH86LAS53Bedjvqwj1gYO7ZBsPwlHT4o42nkjpjtNIDPE8zzWJVrsosj/XVeVx/vumUfa0EAJ+GvqfdIxtaV8SW27G3MbAjw74T6kOAzNbbJZp6gfjX9vT/xwoj8xaEF9STU+ESgNuX3qozvaMVxhN91XOQhZw912K8GVEfhVyMVPcFta9pVxO3zc1OpBrIPTRcP5mzFZ5xoT6rhO9HwlLwffu6DzPIdgQ/QK1ezIx3L7Hx0q2IU2wejK/TBASpHMahRX5fbwyj87oE3UcfHs3nLLLwdws/jRL2RDEClp1tj5EsD8SrLXwmQHnsgsaFIRD/sF4AhfGkkjBy0ZTZSU3oIP55DQ+sMH+uqrzTMdVWQohPTmYqLr16w0V1TPQOgvYUkMUb8ncUPyJNDJPzRH4FQmcdqpBVmUviwPeZRGhoopBazzZzmJPWet0Jc0zvkfUYSQ2GAph2vgs/CCGuml/hqkaKYAn6x6m79XLLWih+pmtEwQr/IWsRBtiWli1Of5Zb86xgZ3KVnvKVw5weOylGv31duk/DrIVw5x3UgfkzT7gOq4TIY3Us0OsS7sjh3VUhS/oSDfYwLbdU1c6jPOJIc/5E5EjtCXdswxZKQx4XBoLQ9HXtjBHT9ZdhIPyLVDb+uGiifjdWgB3Z47HSmkmWUXtyEnqwatIqYhqfYWP6DjclTA3zT96lJunowJdo00HUc8zzKk3oYpVZUmSaY8S5NnH92q/7+1g4IKfgFPukzWMyHPjzx8R/6AIEUubLlATTerkPVJkBqvTRmFvRGlGb4MQyOmEaVGLW7hac9/UkencGCIIdHU6jIRE/6T4QhyiKn1q6ANPboDOoFgZEoj3b0+pSUJ02sFrvXZIjY3fgsz9HCwe2banrQ8LkldfzDN4OKj/KqFK/J6J+YmbQPvcHbFG5CgxpXPACNRlrafDK7DZ9Xj+vhr3fPemxSlxwmE6+K+qzyLFbW++RH1hbCA4zP+UEdpqzy/jl5TfPIpDwo0JUmzeQG+yoXMAq7frIS9ga/SwI8qZUsKp6d0ZfHXmnUmS1Z4SffK9XzbAwN5tc0Ew8Kxt64AC8Ds0rpghQWPT8z79qbQg99Ch/ZGiHIxwybkQegeV5SsuWNeYZV1avPe6I5CHg25yT86QAkd4eqrn7QjOVBbPu5k0zWDoQcgLXBfCQJL4m7/DLVEUQuVd5WOhFLAbe4fHxb7A5Q6oZS2zpWvp8+jU0mRwweVAWyyy81CBHio9BHhkPkMQm6DY3GUZOqsilJfjgXlAkcOpEN+8qPg5vhfi83xDEIULxJJ7cKN7A1JVMLQSJaPAGWFWzL2Fo1+CuvOTk6rKZ6wkpI/7KPiTQP6fSVgBZ2hlSHntYgB/FOkltGa8eqA5+3bsRw4kefEb3C/ExOeTqqhipwPIeRcRZDanBzbgYeWmYwUVUOdK9832xFcyLkAYuvclEtrrXpBXMVQMp6J/jcPphnFTFcB1iUlKrx0i2Dr/qUbMDq2cbizjuAFFhoUniXTF4MUoCeZDE2CIKkqbAUd8Hm5rWecc+BASnYQY4j8Z6TnNkUEEILv2yLMnvmGCnyS499opRJoGc+GHI514Z0Q0k1knJrjsdoPWVqJmHmKXshJTfOFujn9LGkDqO0+vqaY285mmqD7jmg1eTifyj9JljBB4m0lkQbiCRL4E9Rctlxhh+hF5GP6qjVuEaa3Npx6ZMmVrPn6ThYtLXdYZpHONW8YU0gmVPMJkUshTZ4ocDncTp3pPnCHCdhwj86LkM52ahkHWRIqb6uaHuNibHXrZUUbDuKE44lGqVlmbwPMpfWudPNepbwJN2I0YWl9KkqvILqR+VzfhE3lbMfiJTEDZx0UjXfrNURkPkg+zIJw7AH5J9K6lA4CJsUYXSnvuSWrQR3tLfBOFdT7TqkxdQc8ol2ZXd66HXEr02pigNAjnbYFUiKUEz/gwYJA3R4U+DltCmvtK2NStnLhDmRpBoV3SCW9SbEZwD3Ue3cSKRp+LxRLeaRQ0E5kvjm1K+j3uGbloOYWI02Kw8IpphjlRDw9j+CvcdHiUWwlZjmzc0Nhe/NsG54wWn+/wcTzNA8jHvImgAAAABJRU5ErkJggg==');
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --app-bg:#0f131a; --app-surface:#181d26; --app-ink:#e9eef6; --app-ink-soft:#95a1b4;
+    --app-line:#293241; --app-accent:#A5B4FC; --app-accent-soft:#232A4A; --app-warn:#F59E0B;
+    --shadow:0 1px 2px rgba(0,0,0,.45), 0 10px 30px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{background:var(--app-bg); color:var(--app-ink); font-family:var(--f-ko);
+  font-size:14px; line-height:1.55; -webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit; color:inherit}
+
+.app{display:grid; grid-template-columns:352px 1fr; min-height:100vh}
+@media (max-width:900px){ .app{grid-template-columns:1fr} }
+
+.panel{background:var(--app-surface); border-right:1px solid var(--app-line);
+  padding-block:22px 40px; padding-left:max(18px,env(safe-area-inset-left,0px)); padding-right:18px;
+  overflow-y:auto; max-height:100vh; position:sticky; top:0}
+@media (max-width:900px){ .panel{position:static; max-height:none; border-right:0; border-bottom:1px solid var(--app-line)} }
+
+.brand{display:flex; align-items:center; gap:9px}
+.brand svg{width:24px; height:24px; flex:none; color:var(--app-accent)}
+.brand h1{font-size:16.5px; font-weight:600; margin:0; letter-spacing:-.025em}
+.brand-sub{font-size:11.5px; letter-spacing:-.01em;
+  color:var(--app-ink-soft); margin:3px 0 22px}
+
+fieldset{border:0; padding:0; margin:0 0 22px}
+legend{font-size:11.5px; font-weight:600; letter-spacing:-.01em;
+  color:var(--app-accent); padding:0 0 8px; display:block; width:100%;
+  border-bottom:1px solid var(--app-line); margin-bottom:13px}
+.field{display:flex; flex-direction:column; gap:5px; margin-bottom:11px}
+.field label{font-size:12px; font-weight:500; color:var(--app-ink-soft)}
+.field input[type=text],.field input[type=number],.field select,.field textarea{
+  background:var(--app-bg); border:1px solid var(--app-line); border-radius:7px;
+  padding:8px 10px; font-size:13.5px; width:100%}
+.field textarea{resize:vertical; min-height:92px; line-height:1.6; font-size:13px}
+.field :focus-visible{outline:2px solid var(--app-accent); outline-offset:1px; border-color:transparent}
+.hint{font-size:11px; color:var(--app-ink-soft); margin:2px 0 0}
+.row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+
+.swatches{display:grid; grid-template-columns:repeat(2,1fr); gap:8px}
+.sw{border:1.5px solid var(--app-line); border-radius:9px; padding:0; cursor:pointer;
+  background:var(--app-surface); overflow:hidden; text-align:left; transition:border-color .12s}
+.sw:hover{border-color:var(--app-accent)}
+.sw[aria-pressed="true"]{border-color:var(--app-accent); box-shadow:0 0 0 2.5px var(--app-accent-soft)}
+.sw:focus-visible{outline:2px solid var(--app-accent); outline-offset:2px}
+.sw i{display:block; height:30px; position:relative}
+.sw b{display:block; padding:6px 8px 7px; font-size:11.5px; font-weight:500}
+.sw b span{display:block; font-family:var(--f-mono); font-size:9px; letter-spacing:.1em;
+  color:var(--app-ink-soft); text-transform:uppercase}
+
+.check{display:flex; align-items:flex-start; gap:8px; margin-bottom:9px; font-size:12.5px; cursor:pointer}
+.check input{margin:3px 0 0; accent-color:var(--app-accent); flex:none}
+.check b{font-weight:600}
+
+.actions{display:flex; flex-direction:column; gap:8px; margin-top:20px}
+.btn{border:1px solid var(--app-line); background:var(--app-surface); border-radius:8px;
+  padding:10px 14px; font-weight:500; font-size:13px; cursor:pointer; text-align:center}
+.btn:hover{border-color:var(--app-accent)}
+.btn-primary{background:var(--app-accent); border-color:var(--app-accent); color:#fff; font-weight:600}
+.btn-primary:hover{filter:brightness(1.1)}
+.btn:focus-visible{outline:2px solid var(--app-accent); outline-offset:2px}
+
+.notice{background:var(--app-accent-soft); border-radius:9px; padding:11px 13px;
+  font-size:11.5px; line-height:1.65; margin-top:15px}
+.notice b{color:var(--app-warn)}
+.notice p{margin:0 0 6px; font-size:11px; font-weight:600; letter-spacing:-.01em}
+
+.credit{margin-top:26px; padding-top:16px; border-top:1px solid var(--app-line);
+  font-size:10.5px; line-height:1.7; color:var(--app-ink-soft); text-align:center}
+.credit p{margin:0}
+.credit-star{color:#F59E0B; margin-bottom:4px !important; font-size:10px; letter-spacing:.02em}
+.credit strong{color:var(--app-ink); font-weight:600}
+
+/* ───────── 미리보기 ───────── */
+.stage{padding-block:24px 60px;
+  padding-left:max(16px,env(safe-area-inset-left,0px)); padding-right:max(16px,env(safe-area-inset-right,0px));
+  display:flex; flex-direction:column; align-items:center; gap:14px}
+.stage-bar{width:100%; max-width:210mm; display:flex; flex-wrap:wrap; gap:8px 16px;
+  align-items:baseline; justify-content:space-between; font-size:11.5px; color:var(--app-ink-soft)}
+.stage-bar strong{color:var(--app-ink); font-family:var(--f-mono); font-size:12.5px; font-weight:600}
+.zoomwrap{width:100%; max-width:210mm; overflow-x:auto}
+.sheet{width:210mm; min-height:297mm; background:#fff; margin:0 auto 16px;
+  padding:9mm 8mm; display:flex; flex-direction:column; gap:5mm;
+  box-shadow:var(--shadow); border-radius:2px}
+
+/* ═══════════ 교환권 ═══════════ */
+.ticket{
+  width:100%; height:65mm; display:flex; position:relative; overflow:hidden;
+  border-radius:2.5mm; background:var(--tk-bg); color:var(--tk-ink);
+  font-family:var(--f-ko); break-inside:avoid; page-break-inside:avoid;
+}
+.ticket[data-tk="ivory"]{--tk-bg:linear-gradient(118deg,#F7F5F0 0%,#EDE9E0 100%); --tk-band:#E7E1D4; --tk-ink:#1A1F28; --tk-dim:#7C7768;
+  --tk-accent:#1F6F5C; --tk-line:rgba(26,31,40,.15); --tk-ghost:rgba(31,111,92,.13); --tk-plate:transparent; --tk-logosz:100%}
+.ticket[data-tk="frost"]{--tk-bg:linear-gradient(118deg,#F4F7FB 0%,#E5ECF7 100%); --tk-band:#DCE4F2; --tk-ink:#16233A; --tk-dim:#6B7A93;
+  --tk-accent:#2B5CE6; --tk-line:rgba(22,35,58,.14); --tk-ghost:rgba(43,92,230,.13); --tk-plate:transparent; --tk-logosz:100%}
+.ticket[data-tk="ember"]{--tk-bg:linear-gradient(118deg,#F2F0ED 0%,#E6E2DD 100%); --tk-band:#DED8D1; --tk-ink:#1A1917; --tk-dim:#7A746C;
+  --tk-accent:#D14526; --tk-line:rgba(26,25,23,.14); --tk-ghost:rgba(209,69,38,.13); --tk-plate:transparent; --tk-logosz:100%}
+.ticket[data-tk="midnight"]{--tk-bg:linear-gradient(118deg,#131C31 0%,#203050 100%); --tk-band:#0B1221; --tk-ink:#EDF2FB; --tk-dim:rgba(237,242,251,.54);
+  --tk-accent:#8AB4FF; --tk-line:rgba(237,242,251,.17); --tk-ghost:rgba(138,180,255,.14); --tk-plate:#fff; --tk-logosz:76%}
+.ticket[data-tk="forest"]{--tk-bg:linear-gradient(118deg,#17231C 0%,#283B2E 100%); --tk-band:#0F1913; --tk-ink:#E9F2EB; --tk-dim:rgba(233,242,235,.54);
+  --tk-accent:#8FE0AE; --tk-line:rgba(233,242,235,.17); --tk-ghost:rgba(143,224,174,.14); --tk-plate:#fff; --tk-logosz:76%}
+.ticket[data-tk="carbon"]{--tk-bg:linear-gradient(118deg,#0E0F13 0%,#1B1E25 100%); --tk-band:#07080A; --tk-ink:#F2F0EC; --tk-dim:rgba(242,240,236,.52);
+  --tk-accent:#F0A93B; --tk-line:rgba(242,240,236,.16); --tk-ghost:rgba(240,169,59,.14); --tk-plate:#fff; --tk-logosz:76%}
+
+/* 절취 노치 */
+.ticket::after{content:""; position:absolute; top:50%; right:calc(22% - 2.2mm);
+  width:4.4mm; height:4.4mm; border-radius:50%; background:#fff; transform:translateY(-50%);
+  box-shadow:0 -32.5mm 0 #fff, 0 32.5mm 0 #fff; z-index:3}
+/* 상단 하이라이트 — 카드에 빛이 닿은 가장자리 */
+.ticket::before{content:""; position:absolute; inset:0 0 auto; height:.3mm; z-index:4;
+  background:linear-gradient(90deg, transparent, var(--tk-line) 18%, var(--tk-line) 82%, transparent)}
+
+/* ══ 본권 ══ */
+.tk-main{flex:1 1 auto; min-width:0; display:flex; flex-direction:column;
+  position:relative; overflow:hidden}
+/* 배경 A — 각인 물결 */
+.tk-bga{position:absolute; inset:0; pointer-events:none; z-index:0;
+  background:repeating-radial-gradient(circle at 12% 120%, transparent 0 3mm, var(--tk-ghost) 3mm 3.14mm);
+  -webkit-mask-image:radial-gradient(circle at 12% 120%, #000 0%, transparent 68%);
+  mask-image:radial-gradient(circle at 12% 120%, #000 0%, transparent 68%)}
+/* 배경 B — 미세 사선 */
+.tk-bgb{position:absolute; inset:0; pointer-events:none; z-index:0;
+  background:repeating-linear-gradient(118deg, transparent 0 1.5mm, var(--tk-ghost) 1.5mm 1.62mm);
+  -webkit-mask-image:linear-gradient(145deg, #000 0%, transparent 52%);
+  mask-image:linear-gradient(145deg, #000 0%, transparent 52%); opacity:.7}
+/* 잘려나가는 거대 일련번호 — 이 티켓의 단 하나의 큰 동작 */
+.tk-ghost{position:absolute; right:-3.5mm; top:60%; transform:translateY(-44%); z-index:0;
+  font-family:var(--f-mono); font-weight:600; font-size:64pt; line-height:1; letter-spacing:-.03em;
+  color:transparent; -webkit-text-stroke:.5mm var(--tk-ghost); pointer-events:none; user-select:none}
+
+/* ── 마스트헤드 밴드 ── */
+.tk-band{flex:none; height:13mm; background:var(--tk-band); position:relative; z-index:2;
+  display:flex; align-items:center; gap:3.5mm; padding:0 6mm 0 6.5mm;
+  border-bottom:.22mm solid var(--tk-line)}
+.tk-logo{width:9.2mm; height:9.2mm; flex:none; border-radius:50%;
+  background:var(--tk-plate) var(--logo) center/var(--tk-logosz) no-repeat}
+.tk-bandtxt{min-width:0; display:flex; flex-direction:column; gap:.5mm}
+.tk-bandtxt b{font-size:8.6pt; font-weight:600; letter-spacing:-.015em; white-space:nowrap}
+.tk-bandtxt span{font-family:var(--f-mono); font-size:5.9pt; font-weight:400;
+  letter-spacing:.17em; color:var(--tk-dim); white-space:nowrap}
+.tk-bandend{margin-left:auto; display:flex; align-items:center; gap:2mm;
+  font-family:var(--f-mono); font-size:6.4pt; font-weight:500; letter-spacing:.26em;
+  color:var(--tk-accent); white-space:nowrap}
+.tk-sportmark{width:5.2mm; height:5.2mm; flex:none}
+
+/* ── 본문 ── */
+.tk-inner{flex:1 1 auto; min-height:0; position:relative; z-index:1;
+  padding:4.4mm 6mm 7.2mm 6.5mm; display:flex; flex-direction:column; justify-content:space-between}
+.tk-titlerow{display:flex; align-items:flex-start; justify-content:space-between; gap:4mm}
+.tk-title{font-size:16.5pt; font-weight:600; letter-spacing:-.038em; margin:0;
+  line-height:1.16; text-wrap:balance; min-width:0}
+.tk-kind{flex:none; font-size:7.6pt; font-weight:500; letter-spacing:-.01em;
+  border:.28mm solid var(--tk-accent); color:var(--tk-accent);
+  border-radius:9mm; padding:1.1mm 3.2mm; white-space:nowrap; margin-top:.8mm}
+
+.tk-meta{display:flex; margin:0; padding:0; gap:0}
+.tk-meta>div{min-width:0; padding:0 5.5mm; border-left:.22mm solid var(--tk-line)}
+.tk-meta>div:first-child{padding-left:0; border-left:0}
+.tk-meta dt{font-family:var(--f-mono); font-size:5.7pt; font-weight:500; letter-spacing:.2em;
+  text-transform:uppercase; color:var(--tk-dim); margin:0}
+.tk-meta dd{margin:1mm 0 0; font-size:8.6pt; font-weight:500; letter-spacing:-.012em;
+  font-variant-numeric:tabular-nums; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+
+.tk-foot{display:flex; align-items:flex-end; justify-content:space-between;
+  gap:4mm; position:relative; z-index:2}
+.tk-holder{font-size:8.4pt; display:flex; align-items:baseline; gap:1.8mm;
+  white-space:nowrap; flex:none; margin:0}
+.tk-holder span{color:var(--tk-dim); font-size:7.2pt; font-weight:400;
+  letter-spacing:-.01em}
+.tk-blank{display:inline-block; min-width:8mm; border-bottom:.25mm solid var(--tk-line)}
+.tk-name{font-weight:600; font-size:10pt; letter-spacing:-.02em}
+.tk-caution{font-size:6.4pt; font-weight:400; color:var(--tk-dim); text-align:right;
+  line-height:1.5; max-width:74mm; margin:0; flex:0 1 auto; word-break:keep-all}
+.tk-micro{position:absolute; left:6.5mm; right:2mm; bottom:1.6mm; z-index:1;
+  font-family:var(--f-mono); font-size:4.4pt; letter-spacing:.1em;
+  color:var(--tk-dim); opacity:.24; white-space:nowrap; overflow:hidden;
+  pointer-events:none; user-select:none}
+
+/* ══ 스텁 ══ */
+.tk-stub{flex:none; width:22%; background:var(--tk-band); position:relative; overflow:hidden;
+  display:flex; align-items:stretch; gap:2mm; padding:4mm 2.6mm 4.4mm;
+  border-left:.3mm dashed var(--tk-line)}
+.tk-stub::before{content:""; position:absolute; inset:0; pointer-events:none;
+  background:repeating-linear-gradient(118deg, transparent 0 1.5mm, var(--tk-ghost) 1.5mm 1.62mm);
+  -webkit-mask-image:linear-gradient(205deg, #000 0%, transparent 62%);
+  mask-image:linear-gradient(205deg, #000 0%, transparent 62%); opacity:.6}
+.tk-stub>*{position:relative; z-index:1}
+.tk-rot{writing-mode:vertical-rl; transform:rotate(180deg); font-family:var(--f-mono);
+  font-size:5.6pt; font-weight:500; letter-spacing:.28em; color:var(--tk-dim);
+  white-space:nowrap; align-self:center}
+.tk-stubbody{flex:1; min-width:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:space-between; text-align:center}
+.tk-stubnum{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center}
+.tk-nolabel{font-family:var(--f-mono); font-size:5.4pt; font-weight:500;
+  letter-spacing:.26em; color:var(--tk-dim)}
+.tk-serial{font-family:var(--f-mono); font-size:20pt; font-weight:600; letter-spacing:-.03em;
+  color:var(--tk-accent); font-variant-numeric:tabular-nums; line-height:.95}
+.tk-code{font-family:var(--f-mono); font-size:6pt; letter-spacing:.2em;
+  color:var(--tk-dim); margin-top:.9mm}
+.tk-stamp{width:100%; border-top:.22mm solid var(--tk-line); padding-top:1.8mm;
+  font-size:7pt; font-weight:400; letter-spacing:.04em; color:var(--tk-dim)}
+
+/* ───────── 인쇄 ───────── */
+@media print{
+  @page{ size:A4 portrait; margin:0 }
+  html,body{background:#fff}
+  *{-webkit-print-color-adjust:exact; print-color-adjust:exact}
+  .panel,.stage-bar{display:none !important}
+  .app{display:block}
+  .stage{padding:0; display:block}
+  .zoomwrap{max-width:none; overflow:visible}
+  .sheet{box-shadow:none; margin:0; border-radius:0; page-break-after:always; break-after:page}
+  .sheet:last-child{page-break-after:auto; break-after:auto}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <aside class="panel">
+    <div class="brand">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="1.5" y="6" width="21" height="12" rx="2.5" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M17 6v12" stroke="currentColor" stroke-width="1.2" stroke-dasharray="1.6 1.6"/>
+        <path d="M6 12h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+      </svg>
+      <h1>Ticket Press</h1>
+    </div>
+    <p class="brand-sub">티켓 프레스 · 교환권 발행 도구</p>
+
+    <fieldset>
+      <legend>대회 정보</legend>
+      <div class="field"><label for="f-org">주최 / 학교명</label>
+        <input type="text" id="f-org" value="오성중학교"></div>
+      <div class="field"><label for="f-title">대회명</label>
+        <input type="text" id="f-title" value="2026 학교스포츠클럽 배드민턴 대회"></div>
+      <div class="field"><label for="f-preset">용도 (교환권 종류)</label>
+        <select id="f-preset">
+          <option value="goods" selected>기념 굿즈 교환권 — 대회 · 행사 기념품</option>
+          <option value="reward">리워드 티켓 — 수업 보상 일반</option>
+          <option value="chance">찬스 카드 — 수업 중 기회 부여</option>
+          <option value="pass">과제 패스권 — 과제 면제 · 연장</option>
+          <option value="book">도서 교환권 — 독서 인증</option>
+          <option value="activity">체험 이용권 — 동아리 · 체험부스</option>
+          <option value="admit">참가 확인권 — 행사 참가</option>
+        </select>
+        <p class="hint">고르면 아래 두 칸이 자동으로 채워집니다. 직접 고쳐 쓰셔도 됩니다.</p>
+      </div>
+      <div class="field"><label for="f-kind">표기할 명칭</label>
+        <input type="text" id="f-kind" value="기념 굿즈 교환권"></div>
+      <div class="row2">
+        <div class="field"><label for="f-sport">종목 엠블럼</label>
+          <select id="f-sport">
+            <option value="badminton" selected>배드민턴</option>
+            <option value="tabletennis">탁구</option>
+            <option value="basketball">농구</option>
+            <option value="soccer">축구 · 풋살</option>
+            <option value="volleyball">배구 · 피구</option>
+            <option value="trophy">종합 · 기타</option>
+          </select></div>
+        <div class="field"><label for="f-en">영문 부제</label>
+          <input type="text" id="f-en" value="GOODS VOUCHER"></div>
+      </div>
+      <div class="field"><label for="f-date">대회 일자</label>
+        <input type="text" id="f-date" value="2026.10.15"></div>
+      <div class="field"><label for="f-logo">학교 마크 교체 (PNG · 배경 투명 권장)</label>
+        <input type="file" id="f-logo" accept="image/png,image/jpeg,image/svg+xml"
+          style="background:var(--app-bg); border:1px solid var(--app-line); border-radius:7px; padding:7px 9px; font-size:12px">
+        <p class="hint">기본값은 오성중학교 마크입니다. 500KB 이하 파일만 등록됩니다.
+          <button type="button" id="btn-logo-reset" style="background:none;border:0;padding:0;
+            color:var(--app-accent);text-decoration:underline;cursor:pointer;font-size:11px">기본 마크로 되돌리기</button></p>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>교환 안내</legend>
+      <div class="field"><label for="f-item">교환 품목</label>
+        <input type="text" id="f-item" value="기념 굿즈 1종"></div>
+      <div class="field"><label for="f-period">교환 기간</label>
+        <input type="text" id="f-period" value="10.20 – 10.24"></div>
+      <div class="field"><label for="f-place">교환 장소</label>
+        <input type="text" id="f-place" value="체육교사실"></div>
+      <div class="field"><label for="f-caution">하단 유의사항</label>
+        <textarea id="f-caution" rows="2">본 교환권은 1인 1매에 한하며, 분실 시 재발급되지 않습니다.</textarea></div>
+    </fieldset>
+
+    <fieldset>
+      <legend>발행 설정</legend>
+      <div class="row2">
+        <div class="field"><label for="f-qty">발행 수량</label>
+          <input type="number" id="f-qty" value="110" min="1" max="600"></div>
+        <div class="field"><label for="f-prefix">번호 접두어</label>
+          <input type="text" id="f-prefix" value="OSB-26"></div>
+      </div>
+      <label class="check"><input type="checkbox" id="f-verify" checked>
+        <span><b>위조방지 검증코드</b> 인쇄 — 대회명과 번호로 계산한 2자리 코드</span></label>
+      <label class="check"><input type="checkbox" id="f-uselist">
+        <span><b>명단으로 발행</b> — 학생 이름을 미리 인쇄 (수량은 명단 인원수를 따름)</span></label>
+      <div class="field" id="list-wrap" hidden>
+        <label for="f-list">학생 명단 (한 줄에 1명)</label>
+        <textarea id="f-list" rows="5" placeholder="1-3 김민준&#10;1-3 이서연&#10;2-1 박도윤"></textarea>
+        <p class="hint">「학반 이름」 또는 「이름」 형식 모두 가능합니다.</p>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>디자인 테마</legend>
+      <div class="swatches" id="themes">
+        <button type="button" class="sw" data-tk="ivory" aria-pressed="false">
+          <i style="background:linear-gradient(118deg,#F5F3EE,#EBE7DE)"><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);width:12px;height:3px;border-radius:2px;background:#1F6F5C;display:block"></span></i>
+          <b>아이보리<span>Editorial</span></b></button>
+        <button type="button" class="sw" data-tk="frost" aria-pressed="false">
+          <i style="background:linear-gradient(118deg,#F2F5FA,#E3EAF5)"><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);width:12px;height:3px;border-radius:2px;background:#2B5CE6;display:block"></span></i>
+          <b>프로스트<span>Minimal</span></b></button>
+        <button type="button" class="sw" data-tk="ember" aria-pressed="false">
+          <i style="background:linear-gradient(118deg,#F0EEEB,#E4E0DB)"><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);width:12px;height:3px;border-radius:2px;background:#D14526;display:block"></span></i>
+          <b>엠버<span>Sharp</span></b></button>
+        <button type="button" class="sw" data-tk="midnight" aria-pressed="true">
+          <i style="background:linear-gradient(118deg,#121B2F,#1E2C4C)"><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);width:12px;height:3px;border-radius:2px;background:#8AB4FF;display:block"></span></i>
+          <b>미드나이트<span>Tonal</span></b></button>
+        <button type="button" class="sw" data-tk="forest" aria-pressed="false">
+          <i style="background:linear-gradient(118deg,#16211B,#26382C)"><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);width:12px;height:3px;border-radius:2px;background:#8FE0AE;display:block"></span></i>
+          <b>포레스트<span>Calm</span></b></button>
+        <button type="button" class="sw" data-tk="carbon" aria-pressed="false">
+          <i style="background:linear-gradient(118deg,#0D0E11,#191B21)"><span style="position:absolute;right:7px;top:50%;transform:translateY(-50%);width:12px;height:3px;border-radius:2px;background:#F0A93B;display:block"></span></i>
+          <b>카본<span>Premium</span></b></button>
+      </div>
+      <p class="hint" style="margin-top:9px">라이트 3종은 토너 소모가 적어 대량 인쇄에 유리하고, 다크 3종은 소량·고급 인쇄에 어울립니다.</p>
+    </fieldset>
+
+    <div class="actions">
+      <button type="button" class="btn btn-primary" id="btn-print">인쇄하기 (Ctrl+P)</button>
+      <button type="button" class="btn" id="btn-csv">교환 확인 대장 내려받기 (CSV)</button>
+      <button type="button" class="btn" id="btn-reset">기본값으로 되돌리기</button>
+    </div>
+
+    <div class="notice">
+      <p>인쇄 전 확인</p>
+      인쇄 대화상자 「자세히 보기」에서 <b>배경 그래픽을 반드시 켜 주세요.</b> 끄면 색이 빠진 채 인쇄됩니다.<br>
+      용지 A4 · 세로 · 배율 100% · 여백 「없음」이면 A4 한 장에 4매가 정확히 들어갑니다.
+    </div>
+
+    <footer class="credit">
+      <p class="credit-star">★★★★★ 다섯 별, 하나의 코드 / Five Stars. One Code.</p>
+      <p>Oseong Vibe Coding EduHub &middot; &lt;OVH/&gt;<br>
+         Developed by <strong>K.G.B</strong></p>
+    </footer>
+  </aside>
+
+  <main class="stage">
+    <div class="stage-bar">
+      <span><strong id="stat-qty">110매</strong> · A4 <span id="stat-sheet">28</span>장 · 1장당 4매</span>
+      <span>오른쪽 세로 점선이 회수용 스텁 절취선입니다.</span>
+    </div>
+    <div class="zoomwrap"><div id="sheets"></div></div>
+  </main>
+</div>
+
+<script>
+/* ═══ 종목 엠블럼 — 선 중심의 모노라인 ═══ */
+const EMBLEMS = {
+  badminton:'<path d="M24 8 15 26h18L24 8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M19.5 17h9M24 8v18" stroke="currentColor" stroke-width="1" opacity=".5"/><circle cx="24" cy="33" r="5.5" fill="none" stroke="currentColor" stroke-width="2"/>',
+  tabletennis:'<ellipse cx="20" cy="19" rx="10" ry="11.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M22.5 29.5 31 39" stroke="currentColor" stroke-width="2.6" stroke-linecap="round"/><circle cx="35" cy="14" r="4" fill="none" stroke="currentColor" stroke-width="2"/>',
+  basketball:'<circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 24h32M24 8v32M13 13c6.5 6.5 6.5 15.5 0 22M35 13c-6.5 6.5-6.5 15.5 0 22" fill="none" stroke="currentColor" stroke-width="1.4"/>',
+  soccer:'<circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" stroke-width="2"/><path d="m24 15 8.5 6.2-3.2 10h-10.6l-3.2-10L24 15Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M24 8v7M9 19l6.5 2.2M39 19l-6.5 2.2M15 38l3.7-6.8M33 38l-3.7-6.8" stroke="currentColor" stroke-width="1.4"/>',
+  volleyball:'<circle cx="24" cy="24" r="16" fill="none" stroke="currentColor" stroke-width="2"/><path d="M24 8c-7 8-8.5 22-2.5 31M24 8c7 8 8.5 22 2.5 31M8.5 19.5c10-2.5 22 1.5 28.5 9.5" fill="none" stroke="currentColor" stroke-width="1.5"/>',
+  trophy:'<path d="M16 8h16v11a8 8 0 0 1-16 0V8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M16 12h-5a5 5 0 0 0 5 5M32 12h5a5 5 0 0 1-5 5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M24 27v6M17 40h14M19 33h10v7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>'
+};
+
+const PRESETS = {
+  goods:   ['기념 굿즈 교환권', 'GOODS VOUCHER'],
+  reward:  ['리워드 티켓',      'REWARD TICKET'],
+  chance:  ['찬스 카드',        'CHANCE CARD'],
+  pass:    ['과제 패스권',      'TASK PASS'],
+  book:    ['도서 교환권',      'BOOK VOUCHER'],
+  activity:['체험 이용권',      'ACTIVITY PASS'],
+  admit:   ['참가 확인권',      'ADMIT ONE']
+};
+const DEFAULTS = {
+  org:'오성중학교', title:'2026 학교스포츠클럽 배드민턴 대회', sport:'badminton',
+  kind:'기념 굿즈 교환권', en:'GOODS VOUCHER', date:'2026.10.15', item:'기념 굿즈 1종',
+  period:'10.20 – 10.24', place:'체육교사실',
+  caution:'본 교환권은 1인 1매에 한하며, 분실 시 재발급되지 않습니다.',
+  qty:110, prefix:'OSB-26', verify:true, uselist:false, list:'', theme:'midnight'
+};
+const F = {org:'f-org',title:'f-title',sport:'f-sport',kind:'f-kind',en:'f-en',date:'f-date',item:'f-item',
+  period:'f-period',place:'f-place',caution:'f-caution',qty:'f-qty',prefix:'f-prefix',
+  verify:'f-verify',uselist:'f-uselist',list:'f-list'};
+const THEMES = ['ivory','frost','ember','midnight','forest','carbon'];
+const STORE = 'voucher-maker-v2';
+let theme = 'midnight';
+
+function readForm(){
+  const s = {theme};
+  for(const [k,id] of Object.entries(F)){
+    const el = document.getElementById(id);
+    s[k] = el.type === 'checkbox' ? el.checked : el.value;
+  }
+  s.qty = Math.max(1, Math.min(600, parseInt(s.qty,10) || 1));
+  return s;
+}
+function writeForm(s){
+  for(const [k,id] of Object.entries(F)){
+    const el = document.getElementById(id);
+    if(s[k] === undefined) continue;
+    if(el.type === 'checkbox') el.checked = !!s[k]; else el.value = s[k];
+  }
+  theme = THEMES.includes(s.theme) ? s.theme : 'midnight';
+  document.querySelectorAll('#themes .sw').forEach(b =>
+    b.setAttribute('aria-pressed', String(b.dataset.tk === theme)));
+  document.getElementById('list-wrap').hidden = !document.getElementById('f-uselist').checked;
+}
+
+function verifyCode(seed, n){
+  let h = 7; const src = seed + '#' + n;
+  for(let i = 0; i < src.length; i++){ h = (h * 31 + src.charCodeAt(i)) % 1296; }
+  return h.toString(36).toUpperCase().padStart(2,'0');
+}
+const esc = t => String(t).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+function parseList(raw){
+  return raw.split('\n').map(l => l.trim()).filter(Boolean).map(line => {
+    const m = line.match(/^(\S+)\s+(.+)$/);
+    return m ? {cls:m[1], name:m[2]} : {cls:'', name:line};
+  });
+}
+
+function ticketHTML(s, idx, person){
+  const serial = String(idx).padStart(3,'0');
+  const full = (s.prefix ? s.prefix + '-' : '') + serial;
+  const micro = `${esc(s.org)} · ${esc(s.title)} · ${esc(full)} · `.repeat(6);
+  const code = s.verify ? `<div class="tk-code">${verifyCode(s.title, serial)}</div>` : '';
+  const holder = person
+    ? `<p class="tk-holder"><span>수령</span><b class="tk-name">${esc(person.cls)} ${esc(person.name)}</b></p>`
+    : `<p class="tk-holder"><span>학년</span><i class="tk-blank"></i><span>반</span><i class="tk-blank"></i><span>이름</span><i class="tk-blank" style="min-width:17mm"></i></p>`;
+
+  return `<article class="ticket" data-tk="${theme}">
+    <div class="tk-main">
+      <div class="tk-bga"></div><div class="tk-bgb"></div>
+      <div class="tk-ghost">${serial}</div>
+      <header class="tk-band">
+        <div class="tk-logo" role="img" aria-label="${esc(s.org)} 마크"></div>
+        <div class="tk-bandtxt"><b>${esc(s.org)}</b><span>${esc(s.date)}</span></div>
+        <div class="tk-bandend">
+          <svg class="tk-sportmark" viewBox="0 0 48 48" aria-hidden="true">${EMBLEMS[s.sport] || EMBLEMS.trophy}</svg>
+          ${esc(s.en)}
+        </div>
+      </header>
+      <div class="tk-inner">
+        <div class="tk-titlerow">
+          <h2 class="tk-title">${esc(s.title)}</h2>
+          <div class="tk-kind">${esc(s.kind)}</div>
+        </div>
+        <dl class="tk-meta">
+          <div><dt>Item</dt><dd>${esc(s.item)}</dd></div>
+          <div><dt>Period</dt><dd>${esc(s.period)}</dd></div>
+          <div><dt>Place</dt><dd>${esc(s.place)}</dd></div>
+        </dl>
+        <div class="tk-foot">${holder}<p class="tk-caution">${esc(s.caution)}</p></div>
+      </div>
+      <div class="tk-micro">${micro}</div>
+    </div>
+    <div class="tk-stub">
+      <div class="tk-rot">${esc(full)}</div>
+      <div class="tk-stubbody">
+        <div class="tk-nolabel">NO.</div>
+        <div class="tk-stubnum"><div class="tk-serial">${serial}</div>${code}</div>
+        <div class="tk-stamp">확인</div>
+      </div>
+    </div>
+  </article>`;
+}
+
+function render(){
+  const s = readForm();
+  const people = s.uselist ? parseList(s.list) : null;
+  const count = people && people.length ? people.length : s.qty;
+  let html = '', i = 0;
+  while(i < count){
+    html += '<div class="sheet">';
+    for(let j = 0; j < 4 && i < count; j++, i++){
+      html += ticketHTML(s, i + 1, people ? people[i] : null);
+    }
+    html += '</div>';
+  }
+  document.getElementById('sheets').innerHTML = html;
+  document.getElementById('stat-qty').textContent = count + '매';
+  document.getElementById('stat-sheet').textContent = Math.ceil(count / 4);
+  try{ localStorage.setItem(STORE, JSON.stringify(s)); }catch(e){}
+}
+
+document.getElementById('f-preset').addEventListener('change', e => {
+  const pre = PRESETS[e.target.value]; if(!pre) return;
+  document.getElementById('f-kind').value = pre[0];
+  document.getElementById('f-en').value = pre[1];
+  render();
+});
+document.querySelector('.panel').addEventListener('input', e => {
+  if(e.target.id === 'f-uselist') document.getElementById('list-wrap').hidden = !e.target.checked;
+  render();
+});
+document.getElementById('themes').addEventListener('click', e => {
+  const b = e.target.closest('.sw'); if(!b) return;
+  theme = b.dataset.tk;
+  document.querySelectorAll('#themes .sw').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+  render();
+});
+/* 학교 마크 교체 */
+const LOGO_KEY = 'voucher-logo-v1';
+const DEFAULT_LOGO = getComputedStyle(document.documentElement).getPropertyValue('--logo');
+function applyLogo(css){ document.documentElement.style.setProperty('--logo', css); }
+document.getElementById('f-logo').addEventListener('change', e => {
+  const file = e.target.files && e.target.files[0];
+  if(!file) return;
+  if(file.size > 512000){ alert('파일이 너무 큽니다. 500KB 이하 PNG로 줄여서 올려 주세요.'); e.target.value=''; return; }
+  const fr = new FileReader();
+  fr.onload = () => {
+    const css = `url('${fr.result}')`;
+    applyLogo(css);
+    try{ localStorage.setItem(LOGO_KEY, css); }catch(err){}
+  };
+  fr.readAsDataURL(file);
+});
+document.getElementById('btn-logo-reset').addEventListener('click', () => {
+  applyLogo(DEFAULT_LOGO);
+  document.getElementById('f-logo').value = '';
+  try{ localStorage.removeItem(LOGO_KEY); }catch(err){}
+});
+
+document.getElementById('btn-print').addEventListener('click', () => window.print());
+document.getElementById('btn-reset').addEventListener('click', () => {
+  if(!confirm('입력한 내용을 모두 기본값으로 되돌립니다. 계속할까요?')) return;
+  writeForm(DEFAULTS); render();
+});
+document.getElementById('btn-csv').addEventListener('click', () => {
+  const s = readForm();
+  const people = s.uselist ? parseList(s.list) : null;
+  const count = people && people.length ? people.length : s.qty;
+  const rows = [['일련번호','검증코드','학반','이름','교환일','확인자']];
+  for(let i = 1; i <= count; i++){
+    const n = String(i).padStart(3,'0');
+    const p = people ? people[i-1] : null;
+    rows.push([(s.prefix ? s.prefix + '-' : '') + n, s.verify ? verifyCode(s.title, n) : '',
+      p ? p.cls : '', p ? p.name : '', '', '']);
+  }
+  const csv = '﻿' + rows.map(r => r.map(c => `"${c}"`).join(',')).join('\r\n');
+  const url = URL.createObjectURL(new Blob([csv], {type:'text/csv'}));
+  const a = document.createElement('a');
+  a.href = url; a.download = `${s.title.replace(/[\\/:*?"<>|]/g,'')}_교환대장.csv`; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+});
+
+let saved = null;
+try{ saved = JSON.parse(localStorage.getItem(STORE) || 'null'); }catch(e){}
+try{ const L = localStorage.getItem(LOGO_KEY); if(L) applyLogo(L); }catch(e){}
+writeForm(saved || DEFAULTS);
+render();
+</script>
+</body>
+</html>
